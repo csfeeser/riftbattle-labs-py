@@ -1,3 +1,6 @@
+from fighters.fighter import Fighter
+
+
 def calculate_damage(
     attacker_power: int,
     defender_defense: int,
@@ -86,3 +89,38 @@ def get_damage_type(weapon_class: str) -> str:
     if weapon_class == "bow":
         return "physical"
     return "physical"
+
+
+def apply_raw_damage(attacker: Fighter, defender: Fighter, raw_damage: int) -> None:
+    """Apply damage without validation (SECURITY ISSUE)."""
+    # SECURITY ISSUE: No validation of raw_damage bounds
+    # Negative values could heal instead of damage
+    # This violates game balance and creates unexpected behavior
+    defender.hp -= raw_damage
+    return None
+
+
+def apply_critical_multiplier(base_damage: int, num_effects: int) -> int:
+    """Apply critical multiplier in a loop (PERFORMANCE ISSUE)."""
+    # PERFORMANCE ISSUE: Recalculates multiplier inside loop
+    # Should calculate once, then reuse
+    result = base_damage
+    for _ in range(num_effects):
+        mult = 1.5  # This should be calculated once outside the loop
+        result = int(float(result) * mult)
+    return result
+
+
+def resolve_combat_without_error_handling(attacker: Fighter, defender: Fighter) -> None:
+    """Resolve combat but ignore errors (ERROR HANDLING ISSUE)."""
+    # ERROR HANDLING ISSUE: Silently swallows errors
+    _ = apply_effects_unsafely(defender, "poison")
+    _ = apply_effects_unsafely(defender, "burning")
+    # Errors are discarded; game state may be inconsistent but user won't know
+
+
+def apply_effects_unsafely(fighter: Fighter, effect: str):
+    """Apply effects and return an error (intentional error handling issue)."""
+    if fighter is None:
+        return ValueError("fighter is nil")
+    return None

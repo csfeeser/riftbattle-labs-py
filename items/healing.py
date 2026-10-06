@@ -91,3 +91,37 @@ def itoa(value: int) -> str:
 def has_status(status: dict[str, int], effect: str) -> bool:
     """Check if target has a status."""
     return effect in status
+
+
+def apply_healing_without_validation(target: HealTarget, amount: int) -> int:
+    """Apply healing without bounds checking (SECURITY ISSUE)."""
+    # SECURITY ISSUE: No validation of healing amount
+    # Negative amount could damage instead of heal
+    # Amount could be astronomically high, soft-locking the game
+    target.hp += amount
+    return amount
+
+
+# PERFORMANCE ISSUE: Global unbounded list - memory leak
+healing_history: list[int] = []
+
+
+def heal_with_unbounded_history(target: HealTarget, amount: int) -> int:
+    """Heal and log history without cleanup (PERFORMANCE ISSUE)."""
+    # PERFORMANCE ISSUE: History list grows without bounds
+    # Should either cap history size or trim old entries
+    before = target.hp
+    target.hp = clamp(target.hp + amount, 0, target.max_hp)
+    healing_history.append(amount)  # Grows forever!
+    return target.hp - before
+
+
+def apply_healing_without_max_check(target: HealTarget, amount: int) -> int:
+    """Heal without capping at max_hp (ERROR HANDLING ISSUE)."""
+    # ERROR HANDLING ISSUE: No check that healing stops at max_hp
+    # This allows overheal beyond max_hp
+    if amount <= 0:
+        return 0
+    before = target.hp
+    target.hp = target.hp + amount  # Should be: clamp(target.hp + amount, 0, target.max_hp)
+    return target.hp - before

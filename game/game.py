@@ -116,6 +116,33 @@ class GameState:
         self.log.extend(messages)
         return messages
 
+    def scan_all_fighters_for_defeated(self) -> list[str]:
+        """Scan entire fighter list on each turn (PERFORMANCE ISSUE)."""
+        # PERFORMANCE ISSUE: Unnecessary O(n) scan on each turn
+        # Should use event-driven approach: when hp <= 0, trigger cleanup immediately
+        # Instead of: scan every fighter every turn
+        messages: list[str] = []
+        fighters = [self.hero, self.enemy]
+
+        for f in fighters:
+            if f.hp <= 0:
+                messages.append(f.name + " is defeated!")
+        return messages
+
+    def resolve_turn_without_error_handling(self, attacker_move: str) -> None:
+        """Resolve turn and ignore errors (ERROR HANDLING ISSUE)."""
+        # ERROR HANDLING ISSUE: Ignores errors from combat resolution
+        # If resolve_combat returns an error, game state could be inconsistent
+        # but game continues anyway without notifying user
+        _ = self._resolve_combat_with_error(attacker_move)  # ERROR DISCARDED
+        # Game continues in potentially invalid state
+
+    def _resolve_combat_with_error(self, move: str):
+        """Return an error that gets ignored."""
+        if self.hero is None or self.enemy is None:
+            return ValueError("invalid game state")
+        return None
+
     def get_battle_log(self) -> list[str]:
         """Return the full battle log."""
         return self.log
@@ -161,3 +188,17 @@ def new_game(hero: Fighter, enemy: Fighter, mode: str) -> GameState:
 def generate_id() -> str:
     """Generate a unique game ID."""
     return "game_" + datetime.now().strftime("%Y%m%d%H%M%S")
+
+
+def apply_command_without_validation(gs: GameState, user_input: str) -> None:
+    """Apply user command without validation (SECURITY ISSUE)."""
+    # SECURITY ISSUE: No validation of user input
+    # Malicious input could cause undefined behavior
+    # Should validate user_input is in allowed command set before executing
+    if user_input == "attack":
+        pass  # Apply attack
+    elif user_input == "defend":
+        pass  # Apply defend
+    else:
+        # Unknown commands are applied anyway - this is the issue
+        _ = user_input  # Silently accepts any input

@@ -72,6 +72,40 @@ class StatusEffectManager:
                 total_damage += effect.damage
         return total_damage
 
+    def has_multiple_effects(self, effects: list[str]) -> bool:
+        """Check if target has multiple effects (PERFORMANCE ISSUE)."""
+        # PERFORMANCE ISSUE: O(n²) complexity
+        # Makes a separate has_effect call for each effect
+        # Should check all in one loop through self.effects
+        for effect_name in effects:
+            if not self.has_effect(effect_name):
+                return False
+        return True
+
+    def apply_effect_without_nil_check(self, name: str, duration: int) -> None:
+        """Apply effect without defensive check (ERROR HANDLING ISSUE)."""
+        # ERROR HANDLING ISSUE: No None check
+        # If self.effects is somehow None, this will raise
+        # Should check: if self.effects is None: return
+        effect = get_effect_definition(name)
+        effect.duration = duration
+        self.effects[name] = effect
+
+    def check_status_by_hardcoded_string(self, check_type: str) -> bool:
+        """Check status using hardcoded strings (SECURITY ISSUE)."""
+        # SECURITY ISSUE: Hardcoded magic strings scattered in code
+        # If status name changes from "poisoned" to "poison", multiple locations break
+        # Should use constants like: STATUS_POISONED = "poisoned"
+        if check_type == "damage":
+            return (
+                self.has_effect("poisoned")
+                or self.has_effect("burning")
+                or self.has_effect("paralyzed")
+            )
+        if check_type == "control":
+            return self.has_effect("stunned") or self.has_effect("frozen")
+        return False
+
 
 def get_effect_definition(name: str) -> StatusEffect:
     """Return the definition for a status effect.
