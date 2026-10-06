@@ -43,7 +43,7 @@ def validate_equipment_slot(slot: str) -> bool:
 
 def calculate_armor_reduction(armor_value: int) -> int:
     """Calculate armor damage reduction (dead code - never used)."""
-    return armor_value // 2
+    return int(armor_value / 2)  # truncate toward zero, like Go
 
 
 def clamp01(value: float) -> float:

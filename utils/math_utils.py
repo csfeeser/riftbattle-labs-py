@@ -46,18 +46,24 @@ def abs_value(value: int) -> int:
     return value
 
 
+def div_trunc(a: int, b: int) -> int:
+    """Integer division that truncates toward zero, like Go (Python's // floors)."""
+    q = abs(a) // abs(b)
+    return q if (a < 0) == (b < 0) else -q
+
+
 def percentage_of(value: int, percentage: int) -> int:
     """Calculate a percentage of a value."""
-    return (value * percentage) // 100
+    return div_trunc(value * percentage, 100)
 
 
 def average(a: int, b: int) -> int:
     """Return the average of two values."""
-    return (a + b) // 2
+    return div_trunc(a + b, 2)
 
 
 def scale(value: int, numerator: int, denominator: int) -> int:
     """Scale a value based on a ratio."""
     if denominator == 0:
         return 0
-    return (value * numerator) // denominator
+    return div_trunc(value * numerator, denominator)

@@ -9,7 +9,7 @@ def calculate_damage(
     base = attacker_power
     base = apply_elemental_modifier(base, move_element, defender_status)
     base = apply_armor_modifier(base, move_type)
-    base -= defender_defense // 2
+    base -= int(defender_defense / 2)  # truncate toward zero, like Go
 
     if base < 1:
         return 1
@@ -20,7 +20,7 @@ def calculate_damage(
 def calculate_damage_with_critical(base_damage: int, crit_chance: int) -> int:
     """Apply critical hit chance."""
     if crit_chance >= 25:
-        return base_damage + (base_damage // 2)
+        return base_damage + int(base_damage / 2)
     return base_damage
 
 

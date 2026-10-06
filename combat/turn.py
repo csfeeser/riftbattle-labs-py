@@ -85,7 +85,7 @@ def resolve_damage_over_time(fighter_status: dict[str, int]) -> tuple[int, list[
 def resolve_defense(base_damage: int, defense_level: int) -> int:
     """Calculate defense effectiveness."""
     # Simple defense formula
-    reduction = defense_level // 2
+    reduction = int(defense_level / 2)  # truncate toward zero, like Go
     final_damage = base_damage - reduction
     if final_damage < 1:
         return 1

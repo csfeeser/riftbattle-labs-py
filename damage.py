@@ -9,7 +9,7 @@ def calculate_damage(attacker: Fighter, defender: Fighter, move: Move) -> int:
     base = apply_critical_hit(attacker, base)
     base = modify_damage_by_element(base, move.element, defender)
     base = modify_damage_by_armor(base, move.damage_type, defender)
-    base -= defender.stats.defense // 2
+    base -= int(defender.stats.defense / 2)  # truncate toward zero, like Go
 
     if base < 1:
         return 1
@@ -21,15 +21,15 @@ def apply_weapon_style_bonus(attacker: Fighter, damage: int) -> int:
     if attacker.weapon_type == "greatsword":
         return damage + 4
     if attacker.weapon_type == "staff":
-        return damage + attacker.stats.spirit // 2
+        return damage + int(attacker.stats.spirit / 2)
     if attacker.weapon_type == "dagger":
-        return damage + attacker.stats.agility // 2
+        return damage + int(attacker.stats.agility / 2)
     return damage
 
 
 def apply_critical_hit(attacker: Fighter, damage: int) -> int:
     if attacker.stats.crit_chance >= 25:
-        return damage + damage // 2
+        return damage + int(damage / 2)
     return damage
 
 

@@ -22,7 +22,7 @@ class Inventory:
         # 3. Stack size limits
 
         self.slots.append(item)
-        self.weight += item.value // 10  # Rough weight calculation
+        self.weight += int(item.value / 10)  # Rough weight calculation
         return True
 
     def remove_item(self, index: int) -> bool:
