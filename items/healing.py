@@ -14,11 +14,7 @@ class HealTarget:
 
 
 def apply_healing(target: HealTarget, amount: int) -> int:
-    """Apply healing to a target fighter.
-
-    This function checks poison status - this check will be removed for Lab 2 bug.
-    """
-    # POISON CHECK: This is what will be removed for Lab 2
+    """Apply healing to a target fighter."""
     if "poisoned" in target.status:
         return 0  # Cannot heal while poisoned
 
