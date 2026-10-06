@@ -63,7 +63,7 @@ class CombatLogger:
         """Return all log entries."""
         return self.entries
 
-    def get_entriessince(self, since: datetime) -> list[LogEntry]:
+    def get_entries_since(self, since: datetime) -> list[LogEntry]:
         """Return entries after a certain time."""
         result: list[LogEntry] = []
         for entry in self.entries:
