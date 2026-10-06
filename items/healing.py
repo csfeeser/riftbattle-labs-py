@@ -16,11 +16,9 @@ class HealTarget:
 def apply_healing(target: HealTarget, amount: int) -> int:
     """Apply healing to a target fighter.
 
-    This function checks poison status - this check will be removed for Lab 2 bug.
+    BUG: The poison check was removed - poisoned characters can now heal despite poison status.
     """
-    # POISON CHECK: This is what will be removed for Lab 2
-    if "poisoned" in target.status:
-        return 0  # Cannot heal while poisoned
+    # REMOVED: The poison check that prevented healing while poisoned
 
     if amount <= 0:
         return 0
@@ -34,7 +32,7 @@ def use_healing_potion(target: HealTarget) -> str:
     """Use a healing potion on the target."""
     healed = apply_healing(target, 12)
     if healed == 0:
-        return target.name + " cannot heal while poisoned."
+        return target.name + " receives no healing."
     return target.name + " drinks a potion and restores " + itoa(healed) + " HP."
 
 
