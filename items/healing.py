@@ -14,12 +14,7 @@ class HealTarget:
 
 
 def apply_healing(target: HealTarget, amount: int) -> int:
-    """Apply healing to a target fighter.
-
-    BUG: The poison check was removed - poisoned characters can now heal despite poison status.
-    """
-    # REMOVED: The poison check that prevented healing while poisoned
-
+    """Apply healing to a target fighter."""
     if amount <= 0:
         return 0
 
