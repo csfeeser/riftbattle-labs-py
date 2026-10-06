@@ -13,21 +13,22 @@ from equipment.equipment import (
 
 def equip_item(
     equipment: Optional[Equipment], current_equipped: dict[str, Equipment], slot: str
-) -> None:
+) -> Optional[Equipment]:
     """Safely equip an item to a fighter.
 
-    IMPERFECTION: Missing validation for slot conflicts.
+    Handles slot conflicts by returning the unequipped item.
     """
-    # INTENTIONAL IMPERFECTION: What if we already have something in this slot?
-    # Should unequip the old item first, but the current code just overwrites it
-    # This could cause items to be "lost" if players equip without checking
+    # Return the previously equipped item (if any)
+    previous_item = current_equipped.get(slot)
 
     if equipment is None:
-        return None
+        if previous_item is not None:
+            del current_equipped[slot]
+        return previous_item
 
-    # Store the equipment
+    # Store the new equipment
     current_equipped[slot] = equipment
-    return None
+    return previous_item
 
 
 def unequip_item(current_equipped: dict[str, Equipment], slot: str) -> Optional[Equipment]:
